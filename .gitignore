@@ -1,0 +1,24 @@
+#carpeta del entorno virtual deberia ser llamado venv
+.venv/**/*
+**/**/*.pyc 
+#configuracion de vscode
+**/.vscode/**/*
+.vscode/**/*
+**/**/.vscode/**/*
+#archivos temporales de python 
+./**/*.pyc
+*.pyc
+#el recolector de basura de python
+__pycache__/**/*
+**/**/__pycache__/**/*
+**/__pycache__/**/*
+test.py
+#Pruebas de pytest por si acaso
+**/**/.pytest_cache/**/*
+**/.pytest_cache/**/*
+./pytest_cache/**/*
+#Archivo de la base de datos
+database.db
+# parte 2 del tp
+README2.md
+script.sh

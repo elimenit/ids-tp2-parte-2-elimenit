@@ -1,0 +1,87 @@
+meta {
+  name: list
+  type: http
+  seq: 1
+}
+
+get {
+  url: from fastapi import APIRouter
+from typing import List
+from models.equipos_model import (
+    Integrante,
+    AgregarMoviIntegranteReq,
+    EditarIntegranteReq,
+    Equipo,
+    EquipoListItem,
+    CrearEquipoReq,
+    RenombrarEquipoReq,
+    CrearIntegranteReq,
+)
+from dependencies.containers import equipos_service
+from models.movientos_models import Movimientos
+
+router = APIRouter(prefix="/api/equipos", tags=["Equipos"])
+
+
+@router.get("", response_model=List[EquipoListItem])
+def listar_equipos():
+    return equipos_service.listar()
+
+
+@router.get("/{id_equipo}", response_model=Equipo)
+def obtener_equipo(id_equipo: int):
+    return equipos_service.obtener(id_equipo)
+
+
+@router.post("", response_model=Equipo, status_code=201)
+def crear_equipo(req: CrearEquipoReq):
+    return equipos_service.crear(req.nombre)
+
+
+@router.put("/{id_equipo}", response_model=Equipo)
+def renombrar_equipo(id_equipo: int, req: RenombrarEquipoReq):
+    return equipos_service.renombrar(id_equipo, req.nombre)
+
+
+@router.delete("/{id_equipo}", response_model=Equipo)
+def eliminar_equipo(id_equipo: int):
+    return equipos_service.eliminar(id_equipo)
+
+
+# --------------------------------------------------------------------------------
+
+
+@router.post("/{id_equipo}/integrantes", response_model=Integrante, status_code=201)
+def agregar_integrante_a_equipo(id_equipo: int, req: CrearIntegranteReq):
+    return equipos_service.agregar_integrante_a_equipo(
+        id_equipo, req.apodo, req.id_pokemon
+    )
+
+
+@router.post(
+    "/{id_equipo}/integrantes/{id_integrante}/movimientos",
+    response_model=Movimientos,
+    status_code=201,
+)
+def agregar_movimiento_a_integrante(
+    id_equipo: int, id_integrante: int, req: AgregarMoviIntegranteReq
+):
+    return equipos_service.agregar_movimiento_a_integrante(
+        id_equipo, id_integrante, req.id_movimiento
+    )
+
+
+@router.put("/{id_equipo}/integrantes/{id_integrante}", response_model=Integrante)
+def editar_integrante(id_equipo: int, id_integrante: int, req: EditarIntegranteReq):
+    return equipos_service.editar_integrante(
+        id_equipo, id_integrante, req.apodo, req.movimientos
+    )
+
+
+@router.delete("/{id_equipo}/integrantes/{id_integrante}", response_model=Integrante)
+def eliminar_integrante_de_equipo(id_equipo: int, id_integrante: int):
+    return equipos_service.eliminar_integrante_de_equipo(id_equipo, id_integrante)
+http://127.0.0.1:8000/api/equipos/
+  body: json
+  auth: none
+}
