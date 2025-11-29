@@ -20,13 +20,11 @@ def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
 
     integrantes_public = []
     for integrante_db in equipo_db.integrantes:
-        # 1)info pokemon
         pokemon_db = integrante_db.pokemon
         stats = session.exec(
             select(Estadistica).where(Estadistica.pokemon_id == pokemon_db.id)
         ).first()
 
-        # 2) Tipos del pokemon
         tipos = [
             {"id": t.id, "nombre": t.nombre}
             for t in pokemon_db.tipos
@@ -47,7 +45,6 @@ def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
             "tipos": tipos,
         }
 
-        # Movimientos del integrante
         movimientos_public = []
         for im in integrante_db.movimientos:
             mov_db = im.movimiento

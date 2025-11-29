@@ -6,7 +6,7 @@ from models.public.pokemon_public import PokemonPublic, FilterPokemonPublic, Pok
 router_pokemon = APIRouter(prefix="/pokemon", tags=["Pokemon"])
 
 @router_pokemon.get("/", response_model=list[PokemonList], status_code=200)
-def get_all_pokemons(  # ¡Inyectamos¡
+def get_all_pokemons(
     session: SessionDep, db: DatabaseDep,
     filters: FilterPokemonPublic = Depends()
 ) -> list[PokemonList]:

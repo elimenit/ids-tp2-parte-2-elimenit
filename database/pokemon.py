@@ -7,7 +7,6 @@ from models.pokemon import (
 )
 from models.public.pokemon_public import FilterPokemonPublic, PokemonPublic, PokemonList
 def list_pokemon(session: Session, filters: FilterPokemonPublic) -> List[PokemonList]:
-    # 1. Subquery: IDs  de pokemons unicos que cumplen los filtros y ordenados
     pokemon_ids_subq = (
         select(Pokemon.id)
         .join(PokemonTipo, Pokemon.id == PokemonTipo.pokemon_id)
@@ -15,7 +14,6 @@ def list_pokemon(session: Session, filters: FilterPokemonPublic) -> List[Pokemon
         .distinct()
     )
 
-    # Aplicamos filtros
     if filters.tipo is not None:
         pokemon_ids_subq = pokemon_ids_subq.where(Tipo.id == filters.tipo)
     if filters.nombre_parcial:
@@ -34,7 +32,6 @@ def list_pokemon(session: Session, filters: FilterPokemonPublic) -> List[Pokemon
     pokemon_ids_subq = pokemon_ids_subq.offset(filters.offset).limit(filters.limit)
     pokemon_ids_subq = pokemon_ids_subq.subquery()
 
-    # 2. Query final: traemos solo los 20 Pokémon seleccionados y tipos
     stmt = (
         select(Pokemon, Tipo)
         .join(PokemonTipo, Pokemon.id == PokemonTipo.pokemon_id)
@@ -62,7 +59,6 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
     if not pokemon:
         return None
 
-    # --- Tipos + Debilidades ---
     tipos_pokemon = session.exec(
         select(Tipo).join(PokemonTipo).where(PokemonTipo.pokemon_id == id)
     ).all()
@@ -71,7 +67,6 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
     tipos_ids = [t.id for t in tipos_pokemon]
 
     for tipo in tipos_pokemon:
-        # Buscamos que tipos son super efectivos 
         debilidades = session.exec(
             select(Tipo)
             .join(TypeEfficacy, TypeEfficacy.damage_type_id == Tipo.id)
@@ -89,7 +84,6 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
             "debilidades": debilidades_list
         })
 
-    # --- Estadísticas ---
     stats = session.get(Estadistica, id)
     estadisticas_dict = {
         "puntos_de_golpe": stats.puntos_de_golpe if stats else 0,
@@ -99,8 +93,6 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
         "defensa_especial": stats.defensa_especial if stats else 0,
         "velocidad": stats.velocidad if stats else 0,
     }
-
-    # --- Evoluciones ---
     evoluciones = session.exec(
         select(Pokemon)
         .join(Evolucion, Evolucion.to_id == Pokemon.id)
@@ -116,7 +108,6 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
         for evo in evoluciones
     ]
 
-    # --- Movimientos por metodo de aprendizaje ---
     movimientos = session.exec(
         select(Movimiento, PokemonMovimiento.method_id)
         .join(PokemonMovimiento, PokemonMovimiento.move_id == Movimiento.id)
@@ -145,11 +136,11 @@ def get_pokemon(id: int, session: Session) -> Optional[dict]:
             "efecto": nombre_efecto if move.efecto_id else "Sin efecto adicional."
         }
 
-        if method_id == 1:      # Nivel
+        if method_id == 1:     
             por_nivel.append(move_data)
-        elif method_id == 2:    # Huevo
+        elif method_id == 2:   
             por_huevo.append(move_data)
-        elif method_id == 4:    # Maquina
+        elif method_id == 4:   
             por_maquina.append(move_data)
     return {
         "id": pokemon.id,

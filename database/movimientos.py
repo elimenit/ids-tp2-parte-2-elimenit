@@ -12,12 +12,10 @@ from models.pokemon import (
 from fastapi import HTTPException
 
 def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
-    # 1) obtenemos el movimiento
     movimiento = session.get(Movimiento, move_id)
     if not movimiento:
         raise HTTPException(status_code=404, detail="Movimiento no encontrado")
 
-    # 2) Cargar las relaciones foraneas 
     tipo = session.get(Tipo, movimiento.tipo_id)
     categoria = session.get(CategoriaMovimiento, movimiento.categoria_id)
     efecto = session.get(EfectoMovimiento, movimiento.efecto_id)
@@ -25,12 +23,11 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
     if not tipo or not categoria or not efecto:
         raise HTTPException(status_code=500, detail="Datos corruptos en el movimiento")
 
-    # 3) Pokemons que aprenden de este movimiento y su metodo
     statement = (
         select(Pokemon, PokemonMovimiento.method_id)
         .join(PokemonMovimiento, Pokemon.id == PokemonMovimiento.pokemon_id)
         .where(PokemonMovimiento.move_id == move_id)
-        .distinct()  # evita duplicados 
+        .distinct() 
     )
     resultados = session.exec(statement).all()
 
@@ -46,11 +43,11 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
             altura=pokemon.altura,
             peso=pokemon.peso,
         )
-        if method_id == 1:        # Nivel
+        if method_id == 1:        
             por_nivel.append(p)
-        elif method_id == 2:      # Huevo
+        elif method_id == 2:      
             por_huevo.append(p)
-        elif method_id == 4:      # Maquina
+        elif method_id == 4:      
             por_maquina.append(p)
 
     return MovimientoPublicId(

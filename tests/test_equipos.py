@@ -3,7 +3,6 @@ from fastapi.testclient import TestClient
 
 client = TestClient(app)
 
-
 def test_crear_equipo_ok():
     r = client.post("/api/equipos", json={"nombre": "Equipo Rocket"})
     assert r.status_code == 201
@@ -13,6 +12,7 @@ def test_crear_equipo_ok():
 
 
 def test_crear_equipo_duplicado():
+    client.post("/api/equipos", json={"nombre": "A"})
     client.post("/api/equipos", json={"nombre": "A"})
     r = client.post("/api/equipos", json={"nombre": "a"})
     assert r.status_code == 400

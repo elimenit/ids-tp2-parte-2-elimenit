@@ -6,8 +6,6 @@ import pytest
 from pydantic import ValidationError
 
 client = TestClient(app)
-
-
 def test_integrantepost_asignar_campos():
     data = IntegrantePost(id_pokemon=25, apodo="Pika")
     assert data.id_pokemon == 25

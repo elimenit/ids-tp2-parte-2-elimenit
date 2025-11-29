@@ -28,8 +28,3 @@ def get_pokemon_parte_nombre() -> None:
     response = client.get(url="/api/pokemon/?nombre_parcial=bul")
     assert response.status_code == 200
     content = response.json()
-
-#get_pokemon()
-get_pokemon_id()
-#get_pokemon_tipo()
-#get_pokemon_parte_nombre()

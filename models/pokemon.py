@@ -14,7 +14,7 @@ class Tipo(SQLModel, table=True):
     id: int = Field(primary_key=True)
     nombre: str = Field(index=True, unique=True)
     
-    # Relación inversa: un tipo tiene muchos pokemons
+    # Relacion Inversa (Tipo -> Muchos Pokemon)
     pokemons: List["Pokemon"] = Relationship(
         back_populates="tipos",
         link_model=PokemonTipo  
@@ -30,7 +30,7 @@ class Pokemon(SQLModel, table=True):
     peso: float
     base_experience: int
     imagen: Optional[str] = Field(default=None)
-    # Relación muchos-a-muchos con Tipo (solo aquí usamos link_model)
+    # Relacion muchos-a-muchos (link_model)
     tipos: List[Tipo] = Relationship(
         back_populates="pokemons",
         link_model=PokemonTipo
@@ -66,7 +66,7 @@ class CategoriaMovimiento(SQLModel, table=True):
     __tablename__ = "categoria_movimiento"
     
     id: int = Field(primary_key=True)
-    nombre: str = Field(unique=True)  # Physical, Special, Status
+    nombre: str = Field(unique=True) 
 
 
 class EfectoMovimiento(SQLModel, table=True):
@@ -81,12 +81,11 @@ class Movimiento(SQLModel, table=True):
     
     id: int = Field(primary_key=True)
     nombre: str = Field(index=True)
-    #generation_id: int
     tipo_id: int = Field(foreign_key="tipo.id")
     
     potencia: Optional[int] = None
-    usos: int  # PP
-    precision: Optional[int] = Field(default=None, alias="precision")  # 'precision' a veces da conflicto
+    usos: int #puntos_de_poder
+    precision: Optional[int] = Field(default=None, alias="precision") 
     priority: int = Field(default=0)
     target_id: int
     categoria_id: int = Field(foreign_key="categoria_movimiento.id")
@@ -99,6 +98,5 @@ class PokemonMovimiento(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True) 
     
     pokemon_id: int = Field(foreign_key="pokemon.id", index=True)
-    #version_group_id: int = Field(index=True)
     move_id: int = Field(foreign_key="movimiento.id", index=True)
     method_id: int

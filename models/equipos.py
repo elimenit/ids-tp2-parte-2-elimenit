@@ -6,9 +6,7 @@ from models.pokemon import (
     Pokemon, PokemonMovimiento, PokemonTipo,
     Movimiento
 )
-
 # ==================== EQUIPOS Y INTEGRANTES ====================
-
 class Equipo(SQLModel, table=True):
     __tablename__ = "equipo"
 
@@ -22,7 +20,7 @@ class Integrante(SQLModel, table=True):
     __tablename__ = "integrante"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    equipo_id: int = Field(foreign_key="equipo.id", ondelete="CASCADE")  # Cuando elimine equipe
+    equipo_id: int = Field(foreign_key="equipo.id", ondelete="CASCADE") 
     pokemon_id: int = Field(foreign_key="pokemon.id")
     apodo: Optional[str] = None
 
