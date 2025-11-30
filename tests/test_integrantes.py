@@ -1,7 +1,5 @@
 from main import app
 from fastapi.testclient import TestClient
-from models.equipos.integrantes import IntegrantePost, IntegrantePut, Integrante
-from models.equipos.movimientos import Movimiento
 import pytest
 from pydantic import ValidationError
 
@@ -55,3 +53,7 @@ def test_integrantepost_apodo_vacio():
 def test_integrante_pokemon_incompleto_aceptado():
     i = Integrante(id=10, apodo="X", pokemon={"id": 99}, movimientos=[])
     assert "imagen" not in i.pokemon
+
+def main():
+    test_integrantepost_asignar_campos()
+    test_integranteput_comprobacion_datos()

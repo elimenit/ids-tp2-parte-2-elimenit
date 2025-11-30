@@ -27,8 +27,9 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
         select(Pokemon, PokemonMovimiento.method_id)
         .join(PokemonMovimiento, Pokemon.id == PokemonMovimiento.pokemon_id)
         .where(PokemonMovimiento.move_id == move_id)
-        .distinct() 
+        .group_by(Pokemon.id, PokemonMovimiento.method_id) 
     )
+
     resultados = session.exec(statement).all()
 
     por_huevo = []
@@ -36,19 +37,20 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
     por_maquina = []
 
     for pokemon, method_id in resultados:
-        p = PokemonAprendizaje(
+        pokemon_aprendizaje = PokemonAprendizaje(
             id=pokemon.id,
             nombre=pokemon.nombre,
             imagen=pokemon.imagen,
             altura=pokemon.altura,
             peso=pokemon.peso,
         )
-        if method_id == 1:        
-            por_nivel.append(p)
-        elif method_id == 2:      
-            por_huevo.append(p)
-        elif method_id == 4:      
-            por_maquina.append(p)
+        
+        if method_id == 1:
+            por_nivel.append(pokemon_aprendizaje)
+        elif method_id == 2:
+            por_huevo.append(pokemon_aprendizaje)
+        elif method_id == 4:
+            por_maquina.append(pokemon_aprendizaje)
 
     return MovimientoPublicId(
         id=movimiento.id,
@@ -81,10 +83,13 @@ def show_all_moves(session: Session, filtros: FiltrosMovimientosPublic) -> List[
         .join(EfectoMovimiento, Movimiento.efecto_id == EfectoMovimiento.id)
     )
 
+    # Aplicar filtros de forma secuencial
     if filtros.tipo_id:
-        query = query.where(Tipo.id == filtros.tipo_id)
+        query = query.where(Movimiento.tipo_id == filtros.tipo_id)
+    
     if filtros.categoria_id:
-        query = query.where(CategoriaMovimiento.id == filtros.categoria_id)
+        query = query.where(Movimiento.categoria_id == filtros.categoria_id)
+    
     if filtros.nombre:
         query = query.where(Movimiento.nombre.ilike(f"%{filtros.nombre}%"))
 
