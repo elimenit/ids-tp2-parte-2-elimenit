@@ -1,10 +1,17 @@
 from logging.config import fileConfig
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
-
+from sqlmodel import SQLModel #1
 from alembic import context
-
+#agreguo 2 lineas
+from models.pokemon import ( #2
+    Pokemon, PokemonMovimiento, Tipo, 
+    Movimiento, CategoriaMovimiento, TypeEfficacy,
+    Estadistica, EfectoMovimiento, Evolucion
+)
+from models.equipos import (             #3
+    Equipo, Integrante, IntegranteMovimiento
+)
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -18,7 +25,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = SQLModel.metadata            #4
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

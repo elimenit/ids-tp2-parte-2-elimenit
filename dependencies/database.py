@@ -1,4 +1,4 @@
-from sqlmodel import create_engine, Session
+from sqlmodel import SQLModel, create_engine, Session
 from typing import Annotated, Generator
 from fastapi import Depends
 from database.database_public import Database

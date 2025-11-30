@@ -2,12 +2,12 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel, Field, conint
 
 class TipoConDebilidad(BaseModel):
-    id: int
+    id: int = Field(gt=0, le=19)
     nombre: str
     debilidades: List[Dict[str, Any]]
 
 class MovimientoPublic(BaseModel):
-    id: int
+    id: int = Field(gt=0)
     nombre: str
     tipo: Dict[str, Any]
     categoria: str
@@ -17,17 +17,17 @@ class MovimientoPublic(BaseModel):
     efecto: str
 
 class EvolucionPublic(BaseModel):
-    id: int
+    id: int = Field(gt=0)
     nombre: str
     imagen: str
 class PokemonList(BaseModel):
-    id: int
+    id: int = Field(gt=0)
     nombre: str
     imagen: str
     tipos: list
 
 class PokemonPublic(BaseModel):
-    id: int
+    id: int = Field(gt=0)
     nombre: str
     imagen: str
     altura: float

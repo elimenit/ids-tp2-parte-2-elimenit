@@ -64,8 +64,6 @@ def carguar_pokemon(session:Session) -> None:
                 altura=int(partes[3]),
                 peso=int(partes[4]),
                 base_experience=int(partes[5]),
-                #order=int(partes[6]),
-                #is_default=bool(zero_if_empty(partes[7]))
             )
         )
         linea = f.readline()
@@ -170,7 +168,7 @@ def carguar_efectos_movimiento(session: Session) -> None:
         partes = linea.rstrip("\n").split(",",3)
         if len(partes) == 4:
             try:
-                partes[1] = int(partes[1]) # <---esencial para que no se meta porqueria
+                partes[1] = int(partes[1])
                 print(f"funciona {partes[0]} y {partes[1]} con el efecto {partes[2]}")
                 session.add(EfectoMovimiento(id=int(partes[0]), efecto=partes[2]))
             except Exception as e:
@@ -201,7 +199,6 @@ def carguar_moves(session: Session) -> None:
                 Movimiento(
                     id=int(partes[0]),
                     nombre=move_names.get(int(partes[0]), "default"),
-                    #generation_id=int(partes[2]),
                     tipo_id=int(partes[3]),
                     potencia=zero_if_empty(partes[4]),
                     usos=zero_if_empty(partes[5]),
@@ -222,16 +219,13 @@ def carguar_pokemon_moves(session: Session) -> None:
     f = open("data/pokemon_moves.csv",'r')
     f.readline()
     linea = f.readline()
-    while linea:                     ### <--------Verificar
+    while linea:              
         partes = linea.rstrip("\n").split(",")
         session.add(
             PokemonMovimiento(
                 pokemon_id=int(partes[0]),
-                #version_group_id=int(partes[1]),
                 move_id=int(partes[2]),
                 method_id=int(partes[3]),
-                #level=int(partes[4]),
-                #order=zero_if_empty(partes[5]),
             )
         )
         linea = f.readline()
