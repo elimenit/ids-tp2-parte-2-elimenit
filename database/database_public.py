@@ -152,7 +152,7 @@ class Database():
     def eliminar_un_equipo(self, session: Session, id: int) -> EquipoPublic:
         equipo = session.get(Equipo, id)
         if not equipo:
-            raise HTTPException(status_code=404, detail="Equipo no encontrado")
+            raise HTTPException(status_code=404, detail="Equipo no encontrado o no existente")
         if equipo.integrantes:
             raise HTTPException(
                 status_code=400,

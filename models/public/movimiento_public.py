@@ -28,11 +28,11 @@ class MovimientoPublicId(MovimientoPublicList):
     pokemon_por_maquina: List[PokemonAprendizaje] = []
 
 class FiltrosMovimientosPublic(BaseModel):
-    tipo_id: Optional[int] = Field(default=None, ge=1, le=18)
-    categoria_id: Optional[int] = Field(ge=1)
-    potencia_min: Optional[int] = Field(ge=1)
-    potencia_max: Optional[int] = Field(ge=1)
-    precision_min: Optional[int] = Field(ge=1)
-    nombre: Optional[str] = Field(min_length=2)
+    tipo_id: Optional[int] =  Field(default=None, ge=1, le=18)
+    categoria_id: Optional[int] = Field(default=None, ge=1)
+    potencia_min: Optional[int] = Field(default=None, ge=1)
+    potencia_max: Optional[int] = Field(default=None, ge=1)
+    precision_min: Optional[int] = Field(default=None, ge=1)
+    nombre: Optional[str] = None
     limit: conint(ge=1, le=100) = 50
     offset: conint(ge=0) = 0

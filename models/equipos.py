@@ -25,7 +25,7 @@ class Integrante(SQLModel, table=True):
     apodo: Optional[str] = None
 
     equipo: Optional[Equipo] = Relationship(back_populates="integrantes")
-    
+    pokemon: Optional[Pokemon] = Relationship()
     movimientos: List["IntegranteMovimiento"] = Relationship(
         back_populates="integrante",
         sa_relationship_kwargs={"cascade": "all, delete-orphan"}  # ayuda -> delete cascada
