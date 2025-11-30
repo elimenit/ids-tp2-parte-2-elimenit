@@ -20,12 +20,12 @@ class Integrante(SQLModel, table=True):
     __tablename__ = "integrante"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    equipo_id: int = Field(foreign_key="equipo.id", ondelete="CASCADE") 
+    equipo_id: int = Field(foreign_key="equipo.id", ondelete="CASCADE")
     pokemon_id: int = Field(foreign_key="pokemon.id")
     apodo: Optional[str] = None
 
     equipo: Optional[Equipo] = Relationship(back_populates="integrantes")
-    pokemon: Optional[Pokemon] = Relationship()
+    
     movimientos: List["IntegranteMovimiento"] = Relationship(
         back_populates="integrante",
         sa_relationship_kwargs={"cascade": "all, delete-orphan"}  # ayuda -> delete cascada

@@ -1,0 +1,2 @@
+models/equipos.py
+Integrante -> 28 -> #pokemon: Optional[Pokemon] = Relationship() <- Por si acaso

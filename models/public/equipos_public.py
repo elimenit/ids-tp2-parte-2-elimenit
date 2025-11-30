@@ -1,10 +1,10 @@
 from pydantic import BaseModel, Field, conint
 from typing import List, Optional
-# Movimientos
+# Movimiento
 class MovimientoPublic(BaseModel):
     id: int
     nombre: str
-    tipo: dict                      # ← { "id": 10, "nombre": "Fuego" }
+    tipo: dict                     
     categoria: str
     potencia: Optional[int] = None
     precision: Optional[int] = None
@@ -16,7 +16,7 @@ class MovimientoCreate(BaseModel):
 
 class MovimientoUpsert(BaseModel):
     id: int = Field(gt=0)
-
+# Integrante
 class IntegranteCreate(BaseModel):
     id_pokemon: int
     apodo: Optional[str] = None

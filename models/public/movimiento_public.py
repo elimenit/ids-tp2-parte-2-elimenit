@@ -1,4 +1,4 @@
-from pydantic import BaseModel, conint  # paginacion
+from pydantic import BaseModel, conint, Field  # paginacion
 from typing import List, Optional  
 
 class TipoPublic(BaseModel):
@@ -28,11 +28,11 @@ class MovimientoPublicId(MovimientoPublicList):
     pokemon_por_maquina: List[PokemonAprendizaje] = []
 
 class FiltrosMovimientosPublic(BaseModel):
-    tipo_id: Optional[int] = None
-    categoria_id: Optional[int] = None
-    potencia_min: Optional[int] = None
-    potencia_max: Optional[int] = None
-    precision_min: Optional[int] = None
-    nombre: Optional[str] = None
+    tipo_id: Optional[int] = Field(default=None, ge=1, le=18)
+    categoria_id: Optional[int] = Field(ge=1)
+    potencia_min: Optional[int] = Field(ge=1)
+    potencia_max: Optional[int] = Field(ge=1)
+    precision_min: Optional[int] = Field(ge=1)
+    nombre: Optional[str] = Field(min_length=2)
     limit: conint(ge=1, le=100) = 50
     offset: conint(ge=0) = 0
