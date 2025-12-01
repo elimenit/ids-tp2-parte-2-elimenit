@@ -1,18 +1,31 @@
 from typing import List, Optional
 from sqlmodel import Session, select
-from models.equipos import (
-    Equipo, Integrante, IntegranteMovimiento   
-)
+from models.equipos import Equipo, Integrante, IntegranteMovimiento
 from models.public.equipos_public import (
-    EquipoCreate, EquipoList, EquipoPublic, EquipoUpdate, EquipoUpsert,
-    IntegranteCreate, IntegrantePublic, IntegranteUpdate,
-    MovimientoCreate, MovimientoPublic, MovimientoUpsert
+    EquipoCreate,
+    EquipoList,
+    EquipoPublic,
+    EquipoUpdate,
+    EquipoUpsert,
+    IntegranteCreate,
+    IntegrantePublic,
+    IntegranteUpdate,
+    MovimientoCreate,
+    MovimientoPublic,
+    MovimientoUpsert,
 )
 from models.pokemon import (
-    Pokemon, PokemonMovimiento, PokemonTipo,
-    Movimiento, CategoriaMovimiento, EfectoMovimiento, Estadistica, 
-    Evolucion
+    Pokemon,
+    PokemonMovimiento,
+    PokemonTipo,
+    Movimiento,
+    CategoriaMovimiento,
+    EfectoMovimiento,
+    Estadistica,
+    Evolucion,
 )
+
+
 def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
     equipo_db = session.get(Equipo, id)
     if not equipo_db:
@@ -25,10 +38,7 @@ def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
             select(Estadistica).where(Estadistica.pokemon_id == pokemon_db.id)
         ).first()
 
-        tipos = [
-            {"id": t.id, "nombre": t.nombre}
-            for t in pokemon_db.tipos
-        ]
+        tipos = [{"id": t.id, "nombre": t.nombre} for t in pokemon_db.tipos]
 
         pokemon_data = {
             "id": pokemon_db.id,
@@ -56,11 +66,11 @@ def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
                 id=mov_db.id,
                 nombre=mov_db.nombre,
                 tipo={"id": tipo.id, "nombre": tipo.nombre},
-                categoria=categoria.nombre.lower(), 
+                categoria=categoria.nombre.lower(),
                 potencia=mov_db.potencia,
                 precision=mov_db.precision,
                 usos=mov_db.usos,
-                efecto=efecto.efecto if efecto else ""
+                efecto=efecto.efecto if efecto else "",
             )
             movimientos_public.append(mov_public)
 
@@ -68,12 +78,10 @@ def show_one_team(session: Session, id: int) -> Optional[EquipoPublic]:
             id=integrante_db.id,
             apodo=integrante_db.apodo,
             pokemon=pokemon_data,
-            movimientos=movimientos_public
+            movimientos=movimientos_public,
         )
         integrantes_public.append(integrante_public)
 
     return EquipoPublic(
-        id=equipo_db.id,
-        nombre=equipo_db.nombre,
-        integrantes=integrantes_public
+        id=equipo_db.id, nombre=equipo_db.nombre, integrantes=integrantes_public
     )

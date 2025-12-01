@@ -1,15 +1,23 @@
 from sqlmodel import Session, select
 from typing import List, Optional
 from models.public.movimiento_public import (
-    TipoPublic, MovimientoPublicId, MovimientoPublicList, 
-    FiltrosMovimientosPublic, PokemonAprendizaje
+    TipoPublic,
+    MovimientoPublicId,
+    MovimientoPublicList,
+    FiltrosMovimientosPublic,
+    PokemonAprendizaje,
 )
 from models.pokemon import (
-    Pokemon, PokemonMovimiento, PokemonTipo,
-    Movimiento, EfectoMovimiento, CategoriaMovimiento,
-    Tipo
+    Pokemon,
+    PokemonMovimiento,
+    PokemonTipo,
+    Movimiento,
+    EfectoMovimiento,
+    CategoriaMovimiento,
+    Tipo,
 )
 from fastapi import HTTPException
+
 
 def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
     movimiento = session.get(Movimiento, move_id)
@@ -27,7 +35,7 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
         select(Pokemon, PokemonMovimiento.method_id)
         .join(PokemonMovimiento, Pokemon.id == PokemonMovimiento.pokemon_id)
         .where(PokemonMovimiento.move_id == move_id)
-        .group_by(Pokemon.id, PokemonMovimiento.method_id) 
+        .group_by(Pokemon.id, PokemonMovimiento.method_id)
     )
 
     resultados = session.exec(statement).all()
@@ -44,7 +52,7 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
             altura=pokemon.altura,
             peso=pokemon.peso,
         )
-        
+
         if method_id == 1:
             por_nivel.append(pokemon_aprendizaje)
         elif method_id == 2:
@@ -65,7 +73,11 @@ def show_one_move(session: Session, move_id: int) -> MovimientoPublicId:
         pokemon_por_nivel=por_nivel,
         pokemon_por_maquina=por_maquina,
     )
-def show_all_moves(session: Session, filtros: FiltrosMovimientosPublic) -> List[MovimientoPublicList]:
+
+
+def show_all_moves(
+    session: Session, filtros: FiltrosMovimientosPublic
+) -> List[MovimientoPublicList]:
     query = (
         select(
             Movimiento.id,
@@ -86,10 +98,10 @@ def show_all_moves(session: Session, filtros: FiltrosMovimientosPublic) -> List[
     # Aplicar filtros de forma secuencial
     if filtros.tipo_id:
         query = query.where(Movimiento.tipo_id == filtros.tipo_id)
-    
+
     if filtros.categoria_id:
         query = query.where(Movimiento.categoria_id == filtros.categoria_id)
-    
+
     if filtros.nombre:
         query = query.where(Movimiento.nombre.ilike(f"%{filtros.nombre}%"))
 
@@ -98,7 +110,7 @@ def show_all_moves(session: Session, filtros: FiltrosMovimientosPublic) -> List[
     resultados = session.exec(query).all()
 
     return [
-        MovimientoPublicList(     
+        MovimientoPublicList(
             id=row.id,
             nombre=row.nombre,
             tipo=TipoPublic(id=row.tipo_id, nombre=row.tipo_nombre),
