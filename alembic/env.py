@@ -4,11 +4,6 @@ from sqlalchemy import pool
 from sqlmodel import SQLModel #1
 from alembic import context
 #agreguo 2 lineas
-from models.pokemon import ( #2
-    Pokemon, PokemonMovimiento, Tipo, 
-    Movimiento, CategoriaMovimiento, TypeEfficacy,
-    Estadistica, EfectoMovimiento, Evolucion
-)
 from models.equipos import (             #3
     Equipo, Integrante, IntegranteMovimiento
 )
