@@ -4,12 +4,17 @@ from fastapi.testclient import TestClient
 client = TestClient(app)
 
 def test_crear_equipo_ok() -> None:
-    r = client.post("/api/equipos", json={"nombre": "A"})
+    r = client.post("/api/equipos/", json={"nombre": "Z"})
     print(r.json())
     assert r.status_code == 201
     body = r.json()
-    assert body["nombre"] == "A"
+    id_eqp = body["id"]
+    assert body["nombre"] == "Z"
     assert body["integrantes"] == []
+    r1 = client.delete(f"/api/equipos/{id_eqp}")
+    body1 = r1.json()
+    assert r1.status_code == 200
+    assert body1["nombre"] == 'Z'
 
 
 def test_crear_equipo_duplicado():
@@ -32,11 +37,3 @@ def test_renombrar_y_eliminar():
     assert r2.status_code == 200 and r2.json()["nombre"] == "C2"
     r3 = client.delete(f"/api/equipos/{eid}")
     assert r3.status_code == 200 and r3.json()["nombre"] == "C2"
-
-def main():
-    #test_crear_equipo_ok()
-    test_crear_equipo_duplicado()
-    test_listar_equipos_ok()
-    test_renombrar_y_eliminar()
-
-main()
